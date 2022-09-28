@@ -29,6 +29,9 @@ public class BulkSupplyOutwardParsingResult {
     public static BulkSupplyOutwardParsingResult success(SupplyOutwardDTO supplyOutwardDTO){
         return new BulkSupplyOutwardParsingResult(supplyOutwardDTO);
     }
+    public static BulkSupplyOutwardParsingResult successGSTCalculation(SupplyOutwardDTO supplyOutwardDTO){
+        return new BulkSupplyOutwardParsingResult(supplyOutwardDTO);
+    }
     public static BulkSupplyOutwardParsingResult failure(List<BulkSupplyOutwardError> errors){
         return new BulkSupplyOutwardParsingResult(errors);
     }

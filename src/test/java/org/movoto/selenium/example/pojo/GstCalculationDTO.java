@@ -1,59 +1,60 @@
 package org.movoto.selenium.example.pojo;
 
-public class GstCalculation {
 
-    Integer taxableValue;
-    Integer taxRate;
-    Integer igstVal;
-    Integer cgstVal;
-    Integer sgstVal;
-    Integer cessVal;
+public class GstCalculationDTO {
 
-    public Integer getTaxableValue() {
+    Double taxableValue;
+    Double taxRate;
+    Double igstVal;
+    Double cgstVal;
+    Double sgstVal;
+    Double cessVal;
+
+    public Double getTaxableValue() {
         return taxableValue;
     }
 
-    public void setTaxableValue(Integer taxableValue) {
+    public void setTaxableValue(Double taxableValue) {
         this.taxableValue = taxableValue;
     }
 
-    public Integer getTaxRate() {
+    public Double getTaxRate() {
         return taxRate;
     }
 
-    public void setTaxRate(Integer taxRate) {
+    public void setTaxRate(Double taxRate) {
         this.taxRate = taxRate;
     }
 
-    public Integer getIgstVal() {
+    public Double getIgstVal() {
         return igstVal;
     }
 
-    public void setIgstVal(Integer igstVal) {
+    public void setIgstVal(Double igstVal) {
         this.igstVal = igstVal;
     }
 
-    public Integer getCgstVal() {
+    public Double getCgstVal() {
         return cgstVal;
     }
 
-    public void setCgstVal(Integer cgstVal) {
+    public void setCgstVal(Double cgstVal) {
         this.cgstVal = cgstVal;
     }
 
-    public Integer getSgstVal() {
+    public Double getSgstVal() {
         return sgstVal;
     }
 
-    public void setSgstVal(Integer sgstVal) {
+    public void setSgstVal(Double sgstVal) {
         this.sgstVal = sgstVal;
     }
 
-    public Integer getCessVal() {
+    public Double getCessVal() {
         return cessVal;
     }
 
-    public void setCessVal(Integer cessVal) {
+    public void setCessVal(Double cessVal) {
         this.cessVal = cessVal;
     }
 

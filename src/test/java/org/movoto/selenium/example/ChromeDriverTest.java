@@ -5,6 +5,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.movoto.selenium.example.bulkUploadSupplyOutward.XlsToSupplyOutwardConverter;
+import org.movoto.selenium.example.enums.GSTEnum;
+import org.movoto.selenium.example.pojo.GstCalculationDTO;
 import org.movoto.selenium.example.pojo.SupplyOutwardDTO;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -54,7 +56,7 @@ public class ChromeDriverTest {
         // not the implementation.
 
            chromeOptions = new ChromeOptions();
-           chromeOptions.setExperimentalOption("debuggerAddress","127.0.0.1:61539");
+           chromeOptions.setExperimentalOption("debuggerAddress","127.0.0.1:54309");
            driver = new ChromeDriver(chromeOptions);
            /*driver.getWindowHandles()
                    driver.switchTo().window()*/
@@ -246,7 +248,29 @@ public class ChromeDriverTest {
             driver.findElements(By.id("invdate")).get(0).sendKeys(format);
             waitUnmask(driver);
             driver.findElements(By.id("invval")).get(0).sendKeys(String.valueOf(dto.getInvoiceValue()));
+            List<GstCalculationDTO> gstDto = dto.getGstCalculationList();
+            for(GstCalculationDTO gstRow: gstDto){
+                testGSTCalculationFiling(gstRow);
+            }
+
+            waitUnmask(driver);
+            driver.findElements(By.xpath("//button[text()='Save']")).get(0).click();
+            waitUnmask(driver);
+            driver.findElements(By.xpath("//input[@id='ruid_value']/../span")).get(0).click();
+            waitUnmask(driver);
+
+
         }
+    }
+
+    public void testGSTCalculationFiling(GstCalculationDTO row){
+       waitUnmask(driver);
+       GSTEnum percentage= GSTEnum.findByPercentage(row.getTaxRate());
+
+        driver.findElements(By.xpath("//div[@class='table-responsive']/table/tbody/tr[td//text()='"+percentage.id()+"']/td[2]/input")).get(0).sendKeys(row.getTaxableValue().toString());
+        /*/System.out.println("Xpath :" + By.xpath("//div[@class='table-responsive']/table/tbody/tr[td//text()[contains(., '"+percentage.id()+"')]]/td[1]"));*/
+        /*System.out.println("value :" + value);*/
+        //div[@class='table-responsive']/table/tbody/tr[td//text()[contains(., '18%')]]/td[1]
     }
 
     @Test
