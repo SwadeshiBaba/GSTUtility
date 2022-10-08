@@ -89,10 +89,6 @@ public class XlsToSupplyOutwardConverter {
                 v -> isEmpty(v) ? BulkSupplyOutwardError.DOC_NO_IS_EMPTY : null);
 
         supplyOutwardDTO.setDocDate(getDateValue(row.getCell(BulkUploadSupplyOutwardExcelDocument.SupplyOutwardColumns.DOC_DATE)));
-        /*validateAndSetValueOrReturnError(getStringValue(row.getCell(BulkUploadSupplyOutwardExcelDocument.SupplyOutwardColumns.DOC_DATE)),
-                supplyOutwardDTO::setDocDate,
-                e -> errors.addAll(e),
-                v -> isEmpty(v) ? BulkSupplyOutwardError.DOC_NO_IS_EMPTY : null);*/
 
         validateAndSetValueOrReturnError(getDoubleValue(row.getCell(BulkUploadSupplyOutwardExcelDocument.SupplyOutwardColumns.INVOICE_VALUE)),
                 supplyOutwardDTO::setInvoiceValue,

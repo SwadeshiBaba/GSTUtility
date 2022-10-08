@@ -8,6 +8,7 @@ import org.movoto.selenium.example.bulkUploadSupplyOutward.XlsToSupplyOutwardCon
 import org.movoto.selenium.example.enums.GSTEnum;
 import org.movoto.selenium.example.pojo.GstCalculationDTO;
 import org.movoto.selenium.example.pojo.SupplyOutwardDTO;
+import org.movoto.selenium.example.utils.AESUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -16,18 +17,16 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertTrue;
-
 /**
- * Created by haozuo on 3/22/16.
+ * Created by umbhut on 29/02/22.
  */
 public class ChromeDriverTest {
 
@@ -42,6 +41,13 @@ public class ChromeDriverTest {
 
     private List<SupplyOutwardDTO> supplyOutwardDTOList;
 
+    private final Properties properties;
+
+    public ChromeDriverTest() throws IOException {
+        this.properties = new Properties();
+        this.properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+    }
+
    @Before
     public void prepare() {
         //setup chromedriver
@@ -49,14 +55,14 @@ public class ChromeDriverTest {
                 "webdriver.chrome.driver",
                 "C:\\Users\\ubhutada\\IdeaProjects\\selenium-example\\webdriver\\chromedriver.exe");*/
         WebDriverManager.chromedriver().setup();
-        testUrl = "https://www.gst.gov.in/";
+        testUrl = properties.getProperty("testUrl");
 
         // Create a new instance of the Chrome driver
         // Notice that the remainder of the code relies on the interface,
         // not the implementation.
 
            chromeOptions = new ChromeOptions();
-           chromeOptions.setExperimentalOption("debuggerAddress","127.0.0.1:54309");
+           chromeOptions.setExperimentalOption("debuggerAddress",properties.getProperty("debuggerAddress"));
            driver = new ChromeDriver(chromeOptions);
            /*driver.getWindowHandles()
                    driver.switchTo().window()*/
@@ -94,24 +100,15 @@ public class ChromeDriverTest {
         // Find elements by attribute lang="READ_MORE_BTN"
         waitUnmask(driver);
         driver.findElements(By.cssSelector("a[href*=\'login\']")).get(0).click();
-
-       /* List<WebElement> elements = driver
-                .findElements(By.cssSelector("[href*=\"login\"]"));
-
-        //Click the selected button
-        elements.get(0).click();*/
         waitUnmask(driver);
-        //w.until(ExpectedConditions.presenceOfElementLocated(By.id("username")));
 
-        driver.findElements(By.id("username")).get(0).sendKeys("deepalibaheti");
-        driver.findElements(By.id("user_pass")).get(0).sendKeys("Arvind@1");
+        driver.findElements(By.id("username")).get(0).sendKeys(decrypt(properties.getProperty("userName")));
+        driver.findElements(By.id("user_pass")).get(0).sendKeys(decrypt(properties.getProperty("userPass")));
         w = new WebDriverWait(driver, Duration.ofSeconds(10));
         w.until(new ExpectedCondition<Boolean>() { public Boolean apply(WebDriver d) {
             return 6 == driver.findElements(By.id("captcha")).get(0).getAttribute("value").length();
         } });
         driver.findElements(By.xpath("//button[text()='Login']")).get(0).click();
-
-
 
     }
 
@@ -120,43 +117,29 @@ public class ChromeDriverTest {
 
         waitUnmask(driver);
         driver.findElements(By.xpath("//button[span='Return Dashboard']")).get(0).click();
-
-        //driver.findElements(By.xpath("//button[span='Return Dashboard']")).get(0).click();
-
-
     }
 
     @Test
 
     public void testReturnSearch() throws IOException{
 
-        //w = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitUnmask(driver);
-        //w.until(ExpectedConditions.elementToBeClickable(By.xpath("//select[@name='fin']")));
 
         Select financialYear = new Select(driver.findElements(By.name("fin")).get(0));
-        financialYear.selectByVisibleText("2022-23");
+        financialYear.selectByVisibleText(properties.getProperty("financialYear"));
 
         waitUnmask(driver);
-        //w = new WebDriverWait(driver, Duration.ofSeconds(10));
-        //w.until(ExpectedConditions.elementToBeClickable(By.xpath("//select[@name='quarter']")));
 
         Select quarter = new Select(driver.findElements(By.name("quarter")).get(0));
-        quarter.selectByVisibleText("Quarter 2 (Jul - Sep)");
+        quarter.selectByVisibleText(properties.getProperty("quarter"));
 
         waitUnmask(driver);
-        //w = new WebDriverWait(driver, Duration.ofSeconds(10));
-        //w.until(ExpectedConditions.elementToBeClickable(By.xpath("//select[@name='mon']")));
 
         Select month = new Select(driver.findElements(By.name("mon")).get(0));
-        month.selectByVisibleText("September");
+        month.selectByVisibleText(properties.getProperty("month"));
 
         waitUnmask(driver);
         driver.findElements(By.xpath("//button[text() ='Search']")).get(0).click();
-        /*w = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(10));
-        w.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text() ='Search']"))).click();*/
-
-
         //assertTrue("Catch cde length should be 6",6 == catchaCode.length());
         /*assertTrue("The Captcha should be entered manually in 10 sec",
                 (new WebDriverWait(driver, Duration.ofSeconds(10)))
@@ -166,17 +149,7 @@ public class ChromeDriverTest {
                             }
                         })
         );
-*/
-
-
-        /*assertTrue("The page title should be chagned as expected",
-                (new WebDriverWait(driver, Duration.ofSeconds(5)))
-                        .until(new ExpectedCondition<Boolean>() {
-                            public Boolean apply(WebDriver d) {
-                                return d.getTitle().equals("我眼中软件工程人员该有的常识 | 右领军大都督");
-                            }
-                        })
-        );*/
+        */
     }
 
    @Test
@@ -191,17 +164,20 @@ public class ChromeDriverTest {
     public void testGSTR1B2BSEZDEInoices() throws IOException{
 
         waitUnmask(driver);
-        driver.findElements(By.xpath("//div[text()=\'4A, 4B, 6B, 6C - B2B, SEZ, DE Invoices\']")).get(0).click();
+        driver.findElements(By.xpath("//div[text()='4A, 4B, 6B, 6C - B2B, SEZ, DE Invoices']")).get(0).click();
 
     }
-
 
    @Test
 
     public void testAddInvoices() throws IOException{
 
         waitUnmask(driver);
-        driver.findElements(By.xpath("//button[text() =\'Add Record\']")).get(1).click();
+       List<WebElement> eleList = driver.findElements(By.xpath("//button[text() ='Add Record']"));
+        if(!eleList.isEmpty()){
+            eleList.get(eleList.size()-1).click();
+        }
+
     }
 
     @Test
@@ -214,7 +190,6 @@ public class ChromeDriverTest {
         for(SupplyOutwardDTO dto : supplyOutwardDTOList){
             testAddRecordB2B(dto);
         }
-
     }
 
     public void testAddRecordB2B(SupplyOutwardDTO dto) throws IOException {
@@ -225,7 +200,6 @@ public class ChromeDriverTest {
         String gstnxpath = "//div[text()=\'"+dto.getGstn().toUpperCase()+"-\']/..";
         w = new WebDriverWait(driver, Duration.ofSeconds(10));
         w.until(ExpectedConditions.elementToBeClickable(By.xpath(gstnxpath))).click();
-        //driver.findElements(By.xpath(gstnxpath)).get(0).click();
 
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(new ExpectedCondition<Boolean>() {
@@ -248,6 +222,12 @@ public class ChromeDriverTest {
             driver.findElements(By.id("invdate")).get(0).sendKeys(format);
             waitUnmask(driver);
             driver.findElements(By.id("invval")).get(0).sendKeys(String.valueOf(dto.getInvoiceValue()));
+            waitUnmask(driver);
+            //by default : place of supply is getting selected on basis of GST number
+            /*Select pos = new Select(driver.findElements(By.id("pos")).get(0));
+            pos.selectByVisibleText(dto.getPlaceOfSupply());
+            waitUnmask(driver);*/
+
             List<GstCalculationDTO> gstDto = dto.getGstCalculationList();
             for(GstCalculationDTO gstRow: gstDto){
                 testGSTCalculationFiling(gstRow);
@@ -258,23 +238,16 @@ public class ChromeDriverTest {
             waitUnmask(driver);
             driver.findElements(By.xpath("//input[@id='ruid_value']/../span")).get(0).click();
             waitUnmask(driver);
-
-
         }
     }
 
     public void testGSTCalculationFiling(GstCalculationDTO row){
        waitUnmask(driver);
        GSTEnum percentage= GSTEnum.findByPercentage(row.getTaxRate());
-
         driver.findElements(By.xpath("//div[@class='table-responsive']/table/tbody/tr[td//text()='"+percentage.id()+"']/td[2]/input")).get(0).sendKeys(row.getTaxableValue().toString());
-        /*/System.out.println("Xpath :" + By.xpath("//div[@class='table-responsive']/table/tbody/tr[td//text()[contains(., '"+percentage.id()+"')]]/td[1]"));*/
-        /*System.out.println("value :" + value);*/
-        //div[@class='table-responsive']/table/tbody/tr[td//text()[contains(., '18%')]]/td[1]
     }
 
     @Test
-
     public void testOne () throws IOException {
        testLogin();
        testReturnToDashBoard();
@@ -293,5 +266,16 @@ public class ChromeDriverTest {
     public void waitUnmask(WebDriver driver){
         w = new WebDriverWait(driver, Duration.ofSeconds(10));
         w.until(ExpectedConditions.invisibilityOfElementLocated (By.xpath("//div[@class ='dimmer-holder']")));
+    }
+
+    public String decrypt(String encryptedKey){
+        String key = encryptedKey;
+        if(null != encryptedKey){
+            if(encryptedKey.startsWith("{AES}")){
+                encryptedKey = encryptedKey.replaceAll("\\{AES}","");
+                key = AESUtil.decrypt(encryptedKey);
+            }
+        }
+        return key;
     }
 }
