@@ -2,10 +2,8 @@ package org.movoto.selenium.example;
 
 import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.movoto.selenium.example.bulkUploadSupplyOutward.BulkSupplyOutwardError;
-import org.movoto.selenium.example.bulkUploadSupplyOutward.BulkSupplyOutwardParsingResult;
-import org.movoto.selenium.example.bulkUploadSupplyOutward.BulkUploadSupplyOutwardExcelDocument;
-import org.movoto.selenium.example.bulkUploadSupplyOutward.XlsToSupplyOutwardConverter;
+import org.movoto.selenium.example.bulkUploadSupplyOutward.*;
+import org.movoto.selenium.example.pojo.GstCalculationDTO;
 import org.movoto.selenium.example.pojo.SupplyOutwardDTO;
 
 import java.io.File;
@@ -16,7 +14,7 @@ import java.util.List;
 
 public class ReadExcelFile {
 
-    private static final String filePath = "C:\\GST\\OutwardSupply\\SupplyOutwardRegister.xls";
+    private static final String filePath = ChromeDriverTest.properties.getProperty("filePath");
     private XlsToSupplyOutwardConverter converter;
 
     ReadExcelFile(XlsToSupplyOutwardConverter supplyOutwardConverter){
@@ -37,10 +35,14 @@ public class ReadExcelFile {
 
             xls.supplyOutwardRows().forEach( bulkUploadXlsRow -> {
                 try{
-                    /*if(bulkUploadXlsRow.getCell(BulkUploadSupplyOutwardExcelDocument.SupplyOutwardColumns.GSTN)){
+                    String doc_no = XlsToSupplyOutwardConverter.getStringValue(bulkUploadXlsRow.getCell(BulkUploadSupplyOutwardExcelDocument.SupplyOutwardColumns.DOC_NO));
+                    if(null == doc_no){
+                        SupplyOutwardDTO supplyOutwardDTO = uploadSingleSupplyOutwardGSTInvoice(bulkUploadXlsRow, supplyOutwardDTOList.get(supplyOutwardDTOList.size()-1));
+                        supplyOutwardDTOList.set(supplyOutwardDTOList.size()-1, supplyOutwardDTO);
+                    }else{
+                        supplyOutwardDTOList.add(uploadSingleSupplyOutwardInvoice(bulkUploadXlsRow));
+                    }
 
-                    }*/
-                    supplyOutwardDTOList.add(uploadSingleSupplyOutwardInvoice(bulkUploadXlsRow));
                 } catch(RuntimeException e){
                     bulkUploadXlsRow.failed(BulkSupplyOutwardError.UNEXPECTED);
                     System.out.println("Single Supply Outward upload failed : "+ e);
@@ -57,6 +59,22 @@ public class ReadExcelFile {
     }
 
     private SupplyOutwardDTO uploadSingleSupplyOutwardInvoice(BulkUploadSupplyOutwardExcelDocument.BulkUploadXlsRow row){
+        return converter.convert(row, null);
+    }
+
+    private SupplyOutwardDTO uploadSingleSupplyOutwardGSTInvoice(BulkUploadSupplyOutwardExcelDocument.BulkUploadXlsRow row, SupplyOutwardDTO dto){
+        GstCalculationDTO gstCalculationDTO = new GstCalculationDTO();
+        GSTCalculationParsingResult gstCalculationParsingResult = new XlsToSupplyOutwardConverter.GstCalculationConvertor().convert(row, gstCalculationDTO);
+        if(gstCalculationParsingResult.getErrors().isEmpty()){
+            dto.getGstCalculationList().add(gstCalculationDTO);
+            return dto;
+        } else {
+            row.failed(gstCalculationParsingResult.getErrors());
+            return null;
+        }
+    }
+
+    /*private List<GstCalculationDTO> uploadSingleSupplyOutwardGSTCalculations(BulkUploadSupplyOutwardExcelDocument.BulkUploadXlsRow row, SupplyOutwardDTO dto){
         BulkSupplyOutwardParsingResult parsingResult =  converter.convert(row);
 
         if(!parsingResult.getErrors().isEmpty()){
@@ -65,6 +83,6 @@ public class ReadExcelFile {
         }
         return  parsingResult.getSupplyOutwardDTO();
 
-    }
+    }*/
 
 }

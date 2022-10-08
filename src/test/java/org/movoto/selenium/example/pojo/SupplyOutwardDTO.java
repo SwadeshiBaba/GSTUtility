@@ -1,9 +1,12 @@
 package org.movoto.selenium.example.pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 public class SupplyOutwardDTO {
+
     String gstr1Section;
     String gstr3BSection;
     String party;
@@ -11,11 +14,15 @@ public class SupplyOutwardDTO {
     String placeOfSupply;
     String docNo;
     Date docDate;
-    Long invoiceValue;
+    Double invoiceValue;
 
-    List<GstCalculation> gstCalculationList;
+    List<GstCalculationDTO> gstCalculationDTOList;
 
     String errorDescription;
+
+    public SupplyOutwardDTO(){
+        this.setGstCalculationList(new ArrayList<>());
+    };
 
     public String getGstr1Section() {
         return gstr1Section;
@@ -73,11 +80,11 @@ public class SupplyOutwardDTO {
         this.docDate = docDate;
     }
 
-    public Long getInvoiceValue() {
+    public Double getInvoiceValue() {
         return invoiceValue;
     }
 
-    public void setInvoiceValue(Long invoiceValue) {
+    public void setInvoiceValue(Double invoiceValue) {
         this.invoiceValue = invoiceValue;
     }
 
@@ -89,12 +96,12 @@ public class SupplyOutwardDTO {
         this.errorDescription = errorDescription;
     }
 
-    public List<GstCalculation> getGstCalculationList() {
-        return gstCalculationList;
+    public List<GstCalculationDTO> getGstCalculationList() {
+        return gstCalculationDTOList;
     }
 
-    public void setGstCalculationList(List<GstCalculation> gstCalculationList) {
-        this.gstCalculationList = gstCalculationList;
+    public void setGstCalculationList(List<GstCalculationDTO> gstCalculationDTOList) {
+        this.gstCalculationDTOList = gstCalculationDTOList;
     }
 
     @Override
@@ -108,7 +115,7 @@ public class SupplyOutwardDTO {
                 ", docNo='" + docNo + '\'' +
                 ", docDate='" + docDate + '\'' +
                 ", invoiceValue=" + invoiceValue +
-                ", gstCalculationList=" + gstCalculationList +
+                ", gstCalculationList=" + gstCalculationDTOList +
                 ", errorDescription='" + errorDescription + '\'' +
                 '}';
     }

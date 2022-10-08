@@ -53,6 +53,7 @@ public class BulkUploadSupplyOutwardExcelDocument implements AutoCloseable {
     }
 
     public interface SupplyOutwardColumns{
+        String ERROR_DESCRIPTION = "Error Description";
         String GSTR_1_SECTION = "GSTR-1 Section";
         String GSTR_3B_SECTION = "GSTR-3B Section";
         String PARTY = "Party";
