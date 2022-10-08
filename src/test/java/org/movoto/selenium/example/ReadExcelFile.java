@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ReadExcelFile {
 
-    private static final String filePath = "C:\\GST\\OutwardSupply\\SupplyOutwardRegister.xls";
+    private static final String filePath = ChromeDriverTest.properties.getProperty("filePath");
     private XlsToSupplyOutwardConverter converter;
 
     ReadExcelFile(XlsToSupplyOutwardConverter supplyOutwardConverter){

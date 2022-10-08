@@ -41,10 +41,9 @@ public class ChromeDriverTest {
 
     private List<SupplyOutwardDTO> supplyOutwardDTOList;
 
-    private final Properties properties;
+    public static final Properties properties = new Properties();
 
     public ChromeDriverTest() throws IOException {
-        this.properties = new Properties();
         this.properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
     }
 
@@ -197,9 +196,13 @@ public class ChromeDriverTest {
         waitUnmask(driver);
         driver.findElements(By.id("ruid_value")).get(0).sendKeys(dto.getGstn());
         waitUnmask(driver);
-        String gstnxpath = "//div[text()=\'"+dto.getGstn().toUpperCase()+"-\']/..";
-        w = new WebDriverWait(driver, Duration.ofSeconds(10));
-        w.until(ExpectedConditions.elementToBeClickable(By.xpath(gstnxpath))).click();
+        try {
+            String gstnxpath = "//div[text()=\'" + dto.getGstn().toUpperCase() + "-\']/..";
+            w = new WebDriverWait(driver, Duration.ofSeconds(4));
+            w.until(ExpectedConditions.elementToBeClickable(By.xpath(gstnxpath))).click();
+        }catch(TimeoutException t){
+            //do nothing
+        }
 
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(new ExpectedCondition<Boolean>() {
@@ -212,15 +215,14 @@ public class ChromeDriverTest {
         System.out.println("Party : "+party);
         if(null != party && party.length() > 0){
             waitUnmask(driver);
+            driver.findElements(By.id("inv_no")).get(0).clear();
             driver.findElements(By.id("inv_no")).get(0).sendKeys(dto.getDocNo());
             waitUnmask(driver);
-            System.out.println("docDate : "+dto.getDocDate());
-
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             String format = formatter.format(dto.getDocDate());
-            System.out.println(format);
             driver.findElements(By.id("invdate")).get(0).sendKeys(format);
             waitUnmask(driver);
+            driver.findElements(By.id("invval")).get(0).clear();
             driver.findElements(By.id("invval")).get(0).sendKeys(String.valueOf(dto.getInvoiceValue()));
             waitUnmask(driver);
             //by default : place of supply is getting selected on basis of GST number
@@ -236,7 +238,16 @@ public class ChromeDriverTest {
             waitUnmask(driver);
             driver.findElements(By.xpath("//button[text()='Save']")).get(0).click();
             waitUnmask(driver);
-            driver.findElements(By.xpath("//input[@id='ruid_value']/../span")).get(0).click();
+
+
+            try {
+                String ruleIdXpath = "//input[@id='ruid_value']/../span";
+                w = new WebDriverWait(driver, Duration.ofSeconds(3));
+                w.until(ExpectedConditions.elementToBeClickable(By.xpath(ruleIdXpath)));
+                driver.findElements(By.xpath("//input[@id='ruid_value']/../span")).get(0).click();
+            }catch(TimeoutException e){
+                driver.findElements(By.id("ruid_value")).get(0).clear();
+            }
             waitUnmask(driver);
         }
     }
@@ -264,7 +275,7 @@ public class ChromeDriverTest {
     }
 
     public void waitUnmask(WebDriver driver){
-        w = new WebDriverWait(driver, Duration.ofSeconds(10));
+        w = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofSeconds(1));
         w.until(ExpectedConditions.invisibilityOfElementLocated (By.xpath("//div[@class ='dimmer-holder']")));
     }
 
