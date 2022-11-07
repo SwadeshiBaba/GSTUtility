@@ -1,14 +1,14 @@
 package org.legaldtax.gst2a;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.legaldtax.gst2a.dto.xml.*;
-import org.legaldtax.gst2a.dto.xmlenum.Tallyrequest;
+import org.legaldtax.gst2a.dto.xml.Data;
+import org.legaldtax.gst2a.dto.xml.DataDTO;
+import org.legaldtax.gst2a.dto.xml.Envelope;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.*;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -30,25 +30,6 @@ public class GSTR2AExcelToTallyXml {
         JAXBContext contextObj = JAXBContext.newInstance(DataDTO.class);
         Marshaller marshallerObj = contextObj.createMarshaller();
         marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        /*DataDTO dataDTO = new DataDTO();//gstr2AExcelToTallyXml.getInputFile();
-        Data data = new Data();
-        Envelope[] envelopes= new Envelope[10];
-        Envelope envelope = new Envelope();
-        Header header = new Header();
-        Body body = new Body();
-        Importdata importdata = new Importdata();
-        Requestdesc requestdesc = new Requestdesc();
-        Staticvariables staticvariables = new Staticvariables();
-        requestdesc.setStaticvariables(staticvariables);
-        Requestdata requestdata = new Requestdata();
-        importdata.setRequestdata(requestdata);
-        importdata.setRequestdesc(requestdesc);
-        body.setImportdata(importdata);
-        envelope.setHeader(header);
-        envelope.setBody(body);
-        envelopes[0] = envelope;
-        data.setEnvelope(envelopes);
-        dataDTO.setData(data);*/
         DataDTO dataDTO = new DataDTO();
         Data data = gstr2AExcelToTallyXml.getInputFile();
         dataDTO.setData(data);

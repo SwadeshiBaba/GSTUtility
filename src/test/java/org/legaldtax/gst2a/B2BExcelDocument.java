@@ -87,6 +87,7 @@ public class B2BExcelDocument implements AutoCloseable {
         String CGST_28 = "Sum of Central Tax 28";
         String SGST_28 = "Sum of State/UT tax 28";
         String CESS_28 = "Sum of Cess  28";
+        String ROUND_OFF = " Round off";
   /*
         String IS_GSTR1_FILED= "GSTR-1/IFF/GSTR-5 Filing Status";
         String GSTR1_FILED_DATE = "GSTR-1/IFF/GSTR-5 Filing Date";
