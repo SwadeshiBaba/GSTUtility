@@ -50,19 +50,22 @@ public class ChromeDriverTest {
    @Before
     public void prepare() {
         //setup chromedriver
-        /*System.setProperty(
+        System.setProperty(
                 "webdriver.chrome.driver",
-                "C:\\Users\\ubhutada\\IdeaProjects\\selenium-example\\webdriver\\chromedriver.exe");*/
+                "C:\\Users\\ubhutada\\IdeaProjects\\selenium-example\\webdriver\\chromedriver.exe");
         WebDriverManager.chromedriver().setup();
         testUrl = properties.getProperty("testUrl");
 
         // Create a new instance of the Chrome driver
         // Notice that the remainder of the code relies on the interface,
         // not the implementation.
+       //comment start
+           /*chromeOptions = new ChromeOptions();
+           chromeOptions.setExperimentalOption("debuggerAddress",properties.getProperty("debuggerAddress"));*/
+       //comment end
 
-           chromeOptions = new ChromeOptions();
-           chromeOptions.setExperimentalOption("debuggerAddress",properties.getProperty("debuggerAddress"));
-           driver = new ChromeDriver(chromeOptions);
+       //pass chromeOptions in case of existing browser open with debug port address update in properties files.
+           driver = new ChromeDriver();
            /*driver.getWindowHandles()
                    driver.switchTo().window()*/
            // getCapabilities will return all browser capabilities
@@ -78,11 +81,15 @@ public class ChromeDriverTest {
            System.out.println(chromeOptions);
 
            //maximize window
-           //driver.manage().window().maximize();
+           //comment start
+           driver.manage().window().maximize();
+           //comment end
 
            // And now use this to visit myBlog
            // Alternatively the same thing can be done like this
-           // driver.navigate().to(testUrl);
+       //comment start
+           driver.navigate().to(testUrl);
+       //comment end
           //driver.get(testUrl);
 
        /*}else {
@@ -155,7 +162,7 @@ public class ChromeDriverTest {
 
     public void testGSR1IFF() throws IOException {
         w = new WebDriverWait(driver, Duration.ofSeconds(10));
-        w.until(ExpectedConditions.elementToBeClickable(By.xpath("//p[text()='GSTR1']"))).click();
+        w.until(ExpectedConditions.elementToBeClickable(By.xpath("//p[text()='Details of outward supplies of goods or services']"))).click();
     }
 
     @Test
