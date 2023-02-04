@@ -13,13 +13,13 @@ public class AllledgerentriesList {
     private BooleanEnum removezeroentries = BooleanEnum.YES;
     private BooleanEnum ledgerfromitem = BooleanEnum.NO;
     private BooleanEnum isdeemedpositive;
-    private Double amount;
+    private String amount;
 
     public AllledgerentriesList(){
 
     }
 
-    public AllledgerentriesList(String ledgername, BooleanEnum isdeemedpositive, Double amount) {
+    public AllledgerentriesList(String ledgername, BooleanEnum isdeemedpositive, String amount) {
         this.ledgername = ledgername;
         this.isdeemedpositive = isdeemedpositive;
         this.amount = amount;
@@ -60,11 +60,11 @@ public class AllledgerentriesList {
     }
 
     @XmlElement(name = "AMOUNT")
-    public Double getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(Double value) {
+    public void setAmount(String value) {
         this.amount = value;
     }
 }

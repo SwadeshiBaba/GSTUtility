@@ -34,6 +34,7 @@ public class GSTR2AExcelToTallyXml {
         Data data = gstr2AExcelToTallyXml.getInputFile();
         dataDTO.setData(data);
         marshallerObj.marshal(dataDTO.getData(), new FileOutputStream("data.xml"));
+        System.out.println("Successfully completed");
 
     }
 

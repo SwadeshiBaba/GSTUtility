@@ -11,6 +11,7 @@ import org.legaldtax.gst2a.dto.xml.Voucher;
 import org.legaldtax.gst2a.dto.xmlenum.BooleanEnum;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -23,6 +24,8 @@ public class XlsToXmlConverter {
 
     protected static final DataFormatter dataFormatter = new DataFormatter();
     protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat(B2BExcelDocument.DATE_FORMAT);
+
+    private static final DecimalFormat decimalFormat = new DecimalFormat("##.##");
 
     public Envelope convert(B2BExcelDocument.B2BXlsRow row) throws IOException {
         B2BParsingResult result = null;
@@ -169,7 +172,7 @@ public class XlsToXmlConverter {
         Double amount;
         amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.INVOICE_VALUE));
         if(null != amount && amount != 0){
-            allledgerentriesLists.add(new AllledgerentriesList(getStringValue(row.getCell(B2BExcelDocument.B2BColumns.SUPPLIER_NAME_PORTAL)), BooleanEnum.NO, amount));
+            allledgerentriesLists.add(new AllledgerentriesList(getStringValue(row.getCell(B2BExcelDocument.B2BColumns.SUPPLIER_NAME_PORTAL)), BooleanEnum.NO, String.format("%.2f",amount)));
         }
 
         return allledgerentriesLists.size() > 0 ? allledgerentriesLists : null;
@@ -181,7 +184,7 @@ public class XlsToXmlConverter {
         Double amount;
         amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.ROUND_OFF));
         if(null != amount && amount != 0){
-            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_ROUND_OFF"), BooleanEnum.YES, -amount));
+            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_ROUND_OFF"), BooleanEnum.YES, String.format("%.2f",-amount)));
 
         }
 
@@ -193,25 +196,25 @@ public class XlsToXmlConverter {
         Double amount;
         amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.TAXABLE_VALUE_28));
         if(null != amount && amount != 0){
-            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_28"), BooleanEnum.YES, -amount));
+            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_28"), BooleanEnum.YES, String.format("%.2f",-amount)));
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CGST_28));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_28"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_28"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.SGST_28));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_28"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_28"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.IGST_28));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_28"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_28"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CESS_28));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
         }
 
@@ -223,25 +226,25 @@ public class XlsToXmlConverter {
         Double amount;
         amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.TAXABLE_VALUE_18));
         if(null != amount && amount != 0){
-            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_18"), BooleanEnum.YES, -amount));
+            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_18"), BooleanEnum.YES, String.format("%.2f",-amount)));
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CGST_18));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_18"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_18"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.SGST_18));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_18"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_18"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.IGST_18));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_18"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_18"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             /*amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CESS_18));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }*/
         }
 
@@ -254,25 +257,25 @@ public class XlsToXmlConverter {
         Double amount;
         amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.TAXABLE_VALUE_12));
         if(null != amount && amount != 0){
-            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_12"), BooleanEnum.YES, -amount));
+            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_12"), BooleanEnum.YES, String.format("%.2f",-amount)));
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CGST_12));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_12"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_12"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.SGST_12));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_12"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_12"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.IGST_12));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_12"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_12"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             /*amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CESS_12));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }*/
         }
 
@@ -285,25 +288,25 @@ public class XlsToXmlConverter {
         Double amount;
         amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.TAXABLE_VALUE_5));
         if(null != amount && amount != 0){
-            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_5"), BooleanEnum.YES, -amount));
+            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_5"), BooleanEnum.YES, String.format("%.2f",-amount)));
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CGST_5));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_5"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CGST_5"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.SGST_5));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_5"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_5"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.IGST_5));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_5"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_5"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }
 
             /*amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CESS_5));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }*/
         }
 
@@ -316,25 +319,25 @@ public class XlsToXmlConverter {
         Double amount;
         amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.TAXABLE_VALUE_0));
         if(null != amount && amount != 0){
-            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_0"), BooleanEnum.YES, -amount));
+            allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_TAXABLE_VALUE_0"), BooleanEnum.YES, String.format("%.2f",-amount)));
             /*amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CGST_0));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_0"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_0"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }*/
 
             /*amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.SGST_0));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_0"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_SGST_0"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }*/
 
             /*amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.IGST_0));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_0"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_IGST_0"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }*/
 
             /*amount = getDoubleValue(row.getCell(B2BExcelDocument.B2BColumns.CESS_0));
             if(null != amount && amount != 0){
-                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, -amount));
+                allledgerentriesLists.add(new AllledgerentriesList(GSTR2AExcelToTallyXml.properties.getProperty("B2B_LEDGER_CESS"), BooleanEnum.YES, String.format("%.2f",-amount)));
             }*/
         }
 
